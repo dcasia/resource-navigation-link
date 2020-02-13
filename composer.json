@@ -1,0 +1,38 @@
+{
+    "name": "digital-creative/resource-navigation-link",
+    "description": "Create links to internal or external resources.",
+    "keywords": [
+        "laravel",
+        "nova",
+        "tabs",
+        "card",
+        "field"
+    ],
+    "authors": [
+        {
+            "name": "Rafael Milewski"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=7.1.0",
+        "digital-creative/collapsible-resource-manager": "^1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "DigitalCreative\\ResourceNavigationLink\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "DigitalCreative\\ResourceNavigationLink\\ResourceNavigationLinkServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
