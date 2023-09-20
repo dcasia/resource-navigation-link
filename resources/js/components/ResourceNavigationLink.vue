@@ -6,7 +6,7 @@
           v-for="(link, key) of card.links"
           :is="component(link)"
           :key="key"
-          :href="link.url"
+          :href="url(link)"
           :target="target(link)"
           class="p-6 flex-1 text-center cursor-pointer leading-tight text-sm transition"
           :class="[
@@ -41,8 +41,16 @@ export default {
       return 'Link'
     },
 
+    url(link) {
+      if (link.external) {
+        return link.url
+      }
+
+      return this.$url(link.url)
+    },
+
     active(link) {
-      return this.$page.url === link.url
+      return this.$page.url.startsWith(link.url)
     },
 
     target(link) {
