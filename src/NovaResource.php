@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace DigitalCreative\ResourceNavigationLink;
 
-use App\Nova\Resources\Resource;
 use Laravel\Nova\Lenses\Lens;
+use Laravel\Nova\Resource;
 
 class NovaResource extends Link
 {

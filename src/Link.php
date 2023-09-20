@@ -8,6 +8,7 @@ use Closure;
 use JsonSerializable;
 use Laravel\Nova\AuthorizedToSee;
 use Laravel\Nova\Makeable;
+use Laravel\Nova\Resource;
 
 /**
  * @method static static make(string $label)
@@ -29,7 +30,7 @@ class Link implements JsonSerializable
     }
 
     /**
-     * @param class-string<resource> $resource
+     * @param class-string<Resource> $resource
      */
     public function resource(string $resource): NovaResource
     {
