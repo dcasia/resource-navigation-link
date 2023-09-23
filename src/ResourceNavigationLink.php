@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace DigitalCreative\ResourceNavigationLink;
 
-use App\Nova\Resources\Resource;
+use App\Nova\Resources\Resource as BaseNovaResource;
 use Laravel\Nova\Card;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -23,7 +23,7 @@ class ResourceNavigationLink extends Card
     }
 
     /**
-     * @param class-string<Resource> $resource
+     * @param class-string<BaseNovaResource> $resource
      */
     public static function copyFromResource(string $resource): array
     {

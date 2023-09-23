@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace DigitalCreative\ResourceNavigationLink;
 
-use App\Nova\Resources\Resource;
+use App\Nova\Resources\Resource as BaseNovaResource;
 use Closure;
 use JsonSerializable;
 use Laravel\Nova\AuthorizedToSee;
@@ -31,7 +31,7 @@ class Link implements JsonSerializable
     }
 
     /**
-     * @param class-string<Resource> $resource
+     * @param class-string<BaseNovaResource> $resource
      */
     public static function toResourceIndex(string $resource, ?string $label = null): self
     {
@@ -39,7 +39,7 @@ class Link implements JsonSerializable
     }
 
     /**
-     * @param class-string<Resource> $resource
+     * @param class-string<BaseNovaResource> $resource
      */
     public static function toResourceCreate(string $resource, ?string $label = null): self
     {
@@ -47,9 +47,8 @@ class Link implements JsonSerializable
     }
 
     /**
-     * @param class-string<Resource> $resource
+     * @param class-string<BaseNovaResource> $resource
      * @param class-string<Lens> $lens
-     *
      */
     public static function toLens(string $resource, string $lens, ?string $label = null): self
     {
@@ -62,7 +61,7 @@ class Link implements JsonSerializable
     }
 
     /**
-     * @param class-string<Resource> $resource
+     * @param class-string<BaseNovaResource> $resource
      */
     public function resource(string $resource): NovaResource
     {

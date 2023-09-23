@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace DigitalCreative\ResourceNavigationLink;
 
-use App\Nova\Resources\Resource;
+use App\Nova\Resources\Resource as BaseNovaResource;
 use Laravel\Nova\Lenses\Lens;
 
 class NovaResource extends Link
@@ -12,7 +12,7 @@ class NovaResource extends Link
     private string $resourceUriKey;
 
     /**
-     * @param class-string<Resource> $resource
+     * @param class-string<BaseNovaResource> $resource
      */
     public function using(string $resource): self
     {
@@ -22,11 +22,11 @@ class NovaResource extends Link
     }
 
     /**
-     * @param class-string<Lens> $lens
+     * @param class-string<Lens> $resource
      */
-    public function lens(string $lens): self
+    public function lens(string $resource): NovaResource
     {
-        $this->url = sprintf('/resources/%s/lens/%s', $this->resourceUriKey, $lens::make()->uriKey());
+        $this->url = sprintf('/resources/%s/lens/%s', $this->resourceUriKey, $resource::make()->uriKey());
 
         return $this;
     }
