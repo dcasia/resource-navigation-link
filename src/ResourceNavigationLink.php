@@ -1,35 +1,45 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace DigitalCreative\ResourceNavigationLink;
 
+use App\Nova\Resources\Resource as BaseNovaResource;
 use Laravel\Nova\Card;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
+/**
+ * @method static static make(Link[] $links)
+ */
 class ResourceNavigationLink extends Card
 {
-    /**
-     * The width of the card (1/3, 1/2, or full).
-     *
-     * @var string
-     */
-    public $width = '1/2';
+    public $component = 'resource-navigation-link';
+    public $width = Card::FULL_WIDTH;
 
-    /**
-     * ResourceNavigationCard constructor.
-     *
-     * @param array $resources
-     */
-    public function __construct(array $resources)
+    public function __construct(
+        private readonly array $links,
+    )
     {
-        $this->withMeta([ 'resources' => $resources ]);
     }
 
     /**
-     * Get the component name for the element.
-     *
-     * @return string
+     * @param class-string<BaseNovaResource> $resource
      */
-    public function component()
+    public static function copyFromResource(string $resource): array
     {
-        return 'resource-navigation-link';
+        return collect(app()->call([ $resource::make(), 'cards' ]))
+            ->filter(fn (Card $card) => $card instanceof static)
+            ->toArray();
+    }
+
+    public function jsonSerialize(): array
+    {
+        $request = resolve(NovaRequest::class);
+
+        $this->withMeta([
+            'links' => collect($this->links)->filter(fn (Link $link) => $link->authorizedToSee($request)),
+        ]);
+
+        return parent::jsonSerialize();
     }
 }

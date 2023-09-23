@@ -1,80 +1,63 @@
 <template>
 
-    <card class="flex flex-row items-center justify-center">
+    <div class="resource-navigation-link">
 
-        <template v-for="(resource, key) of card.resources">
+        <Card class="flex flex-row items-center justify-center">
 
-            <a :key="key" v-if="resource.type === 'external_link'"
-               :class="linkClass"
-               :href="resource.url"
-               :target="resource.target">
+            <component
+                v-for="(link, key) of card.links"
+                :is="component(link)"
+                :key="key"
+                :href="link.url"
+                :target="target(link)"
+                class="p-6 flex-1 text-center cursor-pointer leading-tight text-sm transition"
+                :class="[
+                    { 'border-b-2 first:rounded-l-lg last:rounded-r-lg': true },
+                    { 'hover:border-[rgba(var(--colors-primary-500))]': true },
+                    { 'border-transparent': active(link) === false },
+                    { 'inertia-link-active font-bold border-[rgba(var(--colors-primary-500))]': active(link) },
+                ]">
 
-                {{ resource.label }}
+                {{ link.label }}
 
-            </a>
+            </component>
 
-            <router-link :class="linkClass" :key="key" :to="resource.router" :target="resource.target">
+        </Card>
 
-                {{ resource.label }}
-
-            </router-link>
-
-        </template>
-
-
-    </card>
+    </div>
 
 </template>
 
 <script>
 
     export default {
-        name: 'ResourceNavigationLink',
+
         props: [
-            'card',
-            'resource',
-            'resourceId',
-            'resourceName'
+            'card'
         ],
-        computed: {
-            linkClass() {
-                return 'p-6 dim flex-1 text-center no-underline text-primary border-b-2 cursor-pointer border-transparent hover:border-90'
+
+        setup() {
+
+            return {
+                component: link => link.external ? 'a' : 'Link',
+                active: link => window.location.pathname.endsWith(link.url),
+                target: link => link.openInNewTab ? '_blank' : '_self'
             }
+
         },
-        mounted() {
 
-            /**
-             * Nova sort the cards per size, smaller comes first, so to keep this card above everything,
-             * It starts with the smallest possible size, and then change resize itself to the largest
-             */
-            this.$parent.$el.classList.add('w-full')
-
-        }
     }
 
 </script>
 
+<style scoped>
 
-<style lang="scss" scoped>
+    .resource-navigation-link {
 
-    .card-panel {
+        min-height: auto;
 
-        height: auto;
-
-    }
-
-    .card {
-
-        a:first-child {
-            border-bottom-left-radius: .5rem;
-        }
-
-        a:last-child {
-            border-bottom-right-radius: .5rem;
-        }
-
-        a.router-link-exact-active {
-            border-color: var(--primary);
+        &:last-child.resource-navigation-link {
+            margin-bottom: 1rem;
         }
 
     }
