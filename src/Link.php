@@ -4,11 +4,12 @@ declare(strict_types = 1);
 
 namespace DigitalCreative\ResourceNavigationLink;
 
+use App\Nova\Resources\Resource;
 use Closure;
 use JsonSerializable;
 use Laravel\Nova\AuthorizedToSee;
+use Laravel\Nova\Lenses\Lens;
 use Laravel\Nova\Makeable;
-use Laravel\Nova\Resource;
 
 /**
  * @method static static make(string $label)
@@ -32,9 +33,48 @@ class Link implements JsonSerializable
     /**
      * @param class-string<Resource> $resource
      */
+    public static function toResourceIndex(string $resource, ?string $label = null): self
+    {
+        return static::make($label ?: $resource::label())->resource($resource);
+    }
+
+    /**
+     * @param class-string<Resource> $resource
+     */
+    public static function toResourceCreate(string $resource, ?string $label = null): self
+    {
+        return static::make($label ?: $resource::label())->resource($resource)->create();
+    }
+
+    /**
+     * @param class-string<Resource> $resource
+     * @param class-string<Lens> $lens
+     *
+     */
+    public static function toLens(string $resource, string $lens, ?string $label = null): self
+    {
+        return static::make($label ?: $lens::make()->name())->resource($resource)->lens($lens);
+    }
+
+    public static function toExternalUrl(string $label, string $url, bool $openInNewTab = true): self
+    {
+        return static::make($label)->url($url)->openInNewTab($openInNewTab);
+    }
+
+    /**
+     * @param class-string<Resource> $resource
+     */
     public function resource(string $resource): NovaResource
     {
         return NovaResource::make($this->label)->using($resource);
+    }
+
+    /**
+     * @param class-string<Lens> $resource
+     */
+    public function lens(string $resource): NovaResource
+    {
+        return NovaResource::make($this->label)->lens($resource);
     }
 
     public function url(string $url, bool $external = true): self

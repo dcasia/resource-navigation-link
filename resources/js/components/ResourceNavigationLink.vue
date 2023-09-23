@@ -1,75 +1,65 @@
 <template>
 
-    <Card class="resource-navigation-link flex flex-row items-center justify-center">
+    <div class="resource-navigation-link">
 
-      <component
-          v-for="(link, key) of card.links"
-          :is="component(link)"
-          :key="key"
-          :href="url(link)"
-          :target="target(link)"
-          class="p-6 flex-1 text-center cursor-pointer leading-tight text-sm transition"
-          :class="[
-              { 'border-b-2 first:rounded-l-lg last:rounded-r-lg': true },
-              { 'hover:border-[rgba(var(--colors-primary-500))]': true },
-              { 'border-transparent': active(link) === false },
-              { 'inertia-link-active font-bold border-[rgba(var(--colors-primary-500))]': active(link) },
-          ]"
-      >
-        {{ link.label }}
-      </component>
+        <Card class="flex flex-row items-center justify-center">
 
-    </Card>
+            <component
+                v-for="(link, key) of card.links"
+                :is="component(link)"
+                :key="key"
+                :href="link.url"
+                :target="target(link)"
+                class="p-6 flex-1 text-center cursor-pointer leading-tight text-sm transition"
+                :class="[
+                    { 'border-b-2 first:rounded-l-lg last:rounded-r-lg': true },
+                    { 'hover:border-[rgba(var(--colors-primary-500))]': true },
+                    { 'border-transparent': active(link) === false },
+                    { 'inertia-link-active font-bold border-[rgba(var(--colors-primary-500))]': active(link) },
+                ]">
+
+                {{ link.label }}
+
+            </component>
+
+        </Card>
+
+    </div>
 
 </template>
 
 <script>
 
+    export default {
 
-export default {
+        props: [
+            'card'
+        ],
 
-  props: [
-      'card'
-  ],
+        setup() {
 
-  methods: {
-    component(link) {
-      if (link.external) {
-        return 'a'
-      }
+            return {
+                component: link => link.external ? 'a' : 'Link',
+                active: link => window.location.pathname.endsWith(link.url),
+                target: link => link.openInNewTab ? '_blank' : '_self'
+            }
 
-      return 'Link'
-    },
+        },
 
-    url(link) {
-      if (link.external) {
-        return link.url
-      }
-
-      return this.$url(link.url)
-    },
-
-    active(link) {
-      return this.$page.url.startsWith(link.url)
-    },
-
-    target(link) {
-      if (link.openInNewTab) {
-        return '_blank'
-      }
-
-      return '_self'
     }
-  }
-
-}
 
 </script>
 
 <style scoped>
 
-.resource-navigation-link {
-  min-height: auto;
-}
+    .resource-navigation-link {
+
+        min-height: auto;
+
+        &:last-child.resource-navigation-link {
+            margin-bottom: 1rem;
+        }
+
+    }
 
 </style>

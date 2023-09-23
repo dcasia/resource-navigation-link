@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace DigitalCreative\ResourceNavigationLink;
 
+use App\Nova\Resources\Resource;
 use Laravel\Nova\Lenses\Lens;
-use Laravel\Nova\Resource;
 
 class NovaResource extends Link
 {
@@ -13,7 +13,6 @@ class NovaResource extends Link
 
     /**
      * @param class-string<Resource> $resource
-     * @return $this
      */
     public function using(string $resource): self
     {
@@ -24,7 +23,6 @@ class NovaResource extends Link
 
     /**
      * @param class-string<Lens> $lens
-     * @return $this
      */
     public function lens(string $lens): self
     {
