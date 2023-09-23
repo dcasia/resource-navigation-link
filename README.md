@@ -21,19 +21,34 @@ composer require digital-creative/resource-navigation-link
 
 ```php
 use DigitalCreative\ResourceNavigationLink\ResourceNavigationLink;
+use DigitalCreative\ResourceNavigationLink\Link;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
-class ExampleNovaResource extends Resource {
+class User extends Resource {
 
-    public function cards(Request $request)
+    public function cards(NovaRequest $request): array
     {
         return [
             ResourceNavigationLink::make([
-                'Resource 1' => NovaResource::make(...),
-                'Resource 2' => LensResource::make(...),
-                'Resource 3' => InternalLink::make(...),
-                'Resource 4' => ExternalLink::make(...),
-                'Resource 5' => RawResource::make(...),
-            ])
+                Link::toResourceIndex(User::class),
+                Link::toResourceIndex(Article::class),
+                Link::toLens(Article::class, MostViewed::class),
+                Link::toExternalUrl('Documentation', 'https://laravel.com/docs/10.x/readme'),
+            ]),
+        ];
+    }
+
+}
+
+/**
+ * Optional: if you want to copy the navigation links from another resource
+ */
+class Article extends Resource {
+
+    public function cards(NovaRequest $request): array
+    {
+        return [
+            ...ResourceNavigationLink::copyFromResource(User::class),
         ];
     }
 
