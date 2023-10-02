@@ -1,5 +1,5 @@
 import ResourceNavigationLink from './components/ResourceNavigationLink'
 
-Nova.booting((Vue, router, store) => {
-    Vue.component('resource-navigation-link', ResourceNavigationLink)
+Nova.booting((app, store) => {
+    app.component('resource-navigation-link', ResourceNavigationLink)
 })
