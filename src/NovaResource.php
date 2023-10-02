@@ -6,6 +6,7 @@ namespace DigitalCreative\ResourceNavigationLink;
 
 use App\Nova\Resources\Resource as BaseNovaResource;
 use Laravel\Nova\Lenses\Lens;
+use Laravel\Nova\Nova;
 
 class NovaResource extends Link
 {
@@ -26,28 +27,28 @@ class NovaResource extends Link
      */
     public function lens(string $resource): NovaResource
     {
-        $this->url = sprintf('/resources/%s/lens/%s', $this->resourceUriKey, $resource::make()->uriKey());
+        $this->url = sprintf('%s/resources/%s/lens/%s', Nova::path(), $this->resourceUriKey, $resource::make()->uriKey());
 
         return $this;
     }
 
     public function index(): self
     {
-        $this->url = sprintf('/resources/%s', $this->resourceUriKey);
+        $this->url = sprintf('%s/resources/%s', Nova::path(), $this->resourceUriKey);
 
         return $this;
     }
 
     public function create(): self
     {
-        $this->url = sprintf('/resources/%s/new', $this->resourceUriKey);
+        $this->url = sprintf('%s/resources/%s/new', Nova::path(), $this->resourceUriKey);
 
         return $this;
     }
 
     public function update(int|string $resourceId): self
     {
-        $this->url = sprintf('/resources/%s/%s/edit', $this->resourceUriKey, $resourceId);
+        $this->url = sprintf('%s/resources/%s/%s/edit', Nova::path(), $this->resourceUriKey, $resourceId);
 
         return $this;
     }
