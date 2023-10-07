@@ -2,7 +2,7 @@
 
     <div class="resource-navigation-link">
 
-        <Card class="whitespace-nowrap overflow-x-auto flex flex-row items-center md:justify-center">
+        <Card class="whitespace-nowrap overflow-x-hidden flex flex-row items-center md:justify-center">
 
             <component
                 v-for="(link, key) of card.links"
