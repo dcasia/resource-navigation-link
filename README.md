@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/digital-creative/resource-navigation-link)](https://packagist.org/packages/digital-creative/resource-navigation-link)
 [![Total Downloads](https://img.shields.io/packagist/dt/digital-creative/resource-navigation-link)](https://packagist.org/packages/digital-creative/resource-navigation-link)
-[![License](https://img.shields.io/packagist/l/digital-creative/resource-navigation-link)](https://github.com/dcasia/resource-navigation-link/blob/master/LICENSE)
+[![License](https://img.shields.io/packagist/l/digital-creative/resource-navigation-link)](https://github.com/dcasia/resource-navigation-link/blob/main/LICENSE)
 
 This package is very similar to the https://github.com/dcasia/resource-navigation-tab (visually they are identical)
 however internally they works differently.
