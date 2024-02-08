@@ -10,6 +10,8 @@ use JsonSerializable;
 use Laravel\Nova\AuthorizedToSee;
 use Laravel\Nova\Lenses\Lens;
 use Laravel\Nova\Makeable;
+use Laravel\Nova\Nova;
+use Laravel\Nova\Filters\FilterEncoder;
 
 /**
  * @method static static make(string $label)
@@ -43,23 +45,20 @@ class Link implements JsonSerializable
      *
      * @param class-string<BaseNovaResource> $resource
      * @param class-string<Filter> $filterClass
-     * @param ?string $label
+     * @param string $label
      * @return self
      */
-    public static function toFilteredResourceIndex(string $resource, string $filterClass, int $value, string $filterParamName = 'filters', ?string $label = null): self
+    public static function toFilteredResourceIndex(string $resource, string $filterClass, int $value, string $label): self
     {
-        $filters = [
+        $filters = new FilterEncoder([
             [
-                'class' => $filterClass,
-                'value' => $value,
+                $filterClass => $value,
             ],
-        ];
+        ]);
 
-        $encodedFilters = base64_encode(json_encode($filters));
+        $url = Nova::path() . '/resources/' . $resource::uriKey() . '?' . $resource::uriKey(). '_filter' . '=' . $filters->encode();
 
-        $url = Nova::path() . '/resources/' . $resource::uriKey() . '?' . $filterParamName . '=' . $encodedFilters;
-
-        return static::make($label ?: 'Filtered ' . $resource::label())
+        return static::make($label)
             ->url($url, false)
             ->openInNewTab(false);
     }
