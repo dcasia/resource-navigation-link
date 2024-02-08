@@ -39,6 +39,32 @@ class Link implements JsonSerializable
     }
 
     /**
+     * Creates a link to a Nova resource index with filters applied.
+     *
+     * @param class-string<BaseNovaResource> $resource
+     * @param class-string<Filter> $filterClass
+     * @param ?string $label
+     * @return self
+     */
+    public static function toFilteredResourceIndex(string $resource, string $filterClass, int $value, string $filterParamName = 'filters', ?string $label = null): self
+    {
+        $filters = [
+            [
+                'class' => $filterClass,
+                'value' => $value,
+            ],
+        ];
+
+        $encodedFilters = base64_encode(json_encode($filters));
+
+        $url = Nova::path() . '/resources/' . $resource::uriKey() . '?' . $filterParamName . '=' . $encodedFilters;
+
+        return static::make($label ?: 'Filtered ' . $resource::label())
+            ->url($url, false)
+            ->openInNewTab(false);
+    }
+
+    /**
      * @param class-string<BaseNovaResource> $resource
      */
     public static function toResourceCreate(string $resource, ?string $label = null): self
