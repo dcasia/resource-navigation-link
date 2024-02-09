@@ -8,6 +8,8 @@ use App\Nova\Resources\Resource as BaseNovaResource;
 use Closure;
 use JsonSerializable;
 use Laravel\Nova\AuthorizedToSee;
+use Laravel\Nova\Filters\Filter;
+use Laravel\Nova\Filters\FilterEncoder;
 use Laravel\Nova\Lenses\Lens;
 use Laravel\Nova\Makeable;
 
@@ -23,6 +25,8 @@ class Link implements JsonSerializable
     private bool|Closure $openInNewTab = false;
 
     protected string $url;
+
+    private array $filters = [];
 
     public function __construct(
         private readonly string $label,
@@ -97,8 +101,34 @@ class Link implements JsonSerializable
         return $this;
     }
 
+    /**
+     * @param class-string<Filter>|Filter $filter
+     */
+    public function addFilter(string|Filter $filter, mixed $value): self
+    {
+        $filter = is_string($filter) ? resolve($filter) : $filter;
+
+        $this->filters[] = [ $filter->key() => $value ];
+
+        return $this;
+    }
+
     public function jsonSerialize(): array
     {
+        if (filled($this->filters)) {
+
+            $filters = new FilterEncoder($this->filters);
+
+            if ($this instanceof NovaResource) {
+
+                $this->url(
+                    sprintf('%s?%s_filter=%s', $this->url, $this->resourceUriKey, $filters->encode()),
+                );
+
+            }
+
+        }
+
         return [
             'label' => $this->label,
             'url' => $this->url,

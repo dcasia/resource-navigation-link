@@ -11,7 +11,7 @@ use Laravel\Nova\Nova;
 
 class NovaResource extends Link
 {
-    private string $resourceUriKey;
+    protected string $resourceUriKey;
 
     /**
      * @param class-string<BaseNovaResource> $resource
