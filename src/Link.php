@@ -8,10 +8,10 @@ use App\Nova\Resources\Resource as BaseNovaResource;
 use Closure;
 use JsonSerializable;
 use Laravel\Nova\AuthorizedToSee;
+use Laravel\Nova\Filters\Filter;
+use Laravel\Nova\Filters\FilterEncoder;
 use Laravel\Nova\Lenses\Lens;
 use Laravel\Nova\Makeable;
-use Laravel\Nova\Nova;
-use Laravel\Nova\Filters\FilterEncoder;
 
 /**
  * @method static static make(string $label)
@@ -26,6 +26,8 @@ class Link implements JsonSerializable
 
     protected string $url;
 
+    private array $filters = [];
+
     public function __construct(
         private readonly string $label,
     )
@@ -38,29 +40,6 @@ class Link implements JsonSerializable
     public static function toResourceIndex(string $resource, ?string $label = null): self
     {
         return static::make($label ?: $resource::label())->resource($resource);
-    }
-
-    /**
-     * Creates a link to a Nova resource index with filters applied.
-     *
-     * @param class-string<BaseNovaResource> $resource
-     * @param class-string<Filter> $filterClass
-     * @param string $label
-     * @return self
-     */
-    public static function toFilteredResourceIndex(string $resource, string $filterClass, int $value, string $label): self
-    {
-        $filters = new FilterEncoder([
-            [
-                $filterClass => $value,
-            ],
-        ]);
-
-        $url = Nova::path() . '/resources/' . $resource::uriKey() . '?' . $resource::uriKey(). '_filter' . '=' . $filters->encode();
-
-        return static::make($label)
-            ->url($url, false)
-            ->openInNewTab(false);
     }
 
     /**
@@ -122,8 +101,34 @@ class Link implements JsonSerializable
         return $this;
     }
 
+    /**
+     * @param class-string<Filter>|Filter $filter
+     */
+    public function addFilter(string|Filter $filter, mixed $value): self
+    {
+        $filter = is_string($filter) ? resolve($filter) : $filter;
+
+        $this->filters[] = [ $filter->key() => $value ];
+
+        return $this;
+    }
+
     public function jsonSerialize(): array
     {
+        if (filled($this->filters)) {
+
+            $filters = new FilterEncoder($this->filters);
+
+            if ($this instanceof NovaResource) {
+
+                $this->url(
+                    sprintf('%s?%s_filter=%s', $this->url, $this->resourceUriKey, $filters->encode()),
+                );
+
+            }
+
+        }
+
         return [
             'label' => $this->label,
             'url' => $this->url,
