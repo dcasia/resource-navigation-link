@@ -28,6 +28,12 @@ class Link implements JsonSerializable
 
     private array $filters = [];
 
+    private bool $activeByFilter = false;
+
+    private string|Filter|null $activeFilter = null;
+
+    private mixed $activeValue = null;
+
     public function __construct(
         private readonly string $label,
     )
@@ -113,6 +119,18 @@ class Link implements JsonSerializable
         return $this;
     }
 
+    /**
+     * @param  class-string<Filter>|Filter  $filter
+     */
+    public function activeByFilter(string|Filter $filter, mixed $value): self
+    {
+        $this->activeByFilter = true;
+        $this->activeFilter = $filter;
+        $this->activeValue = $value;
+
+        return $this;
+    }
+
     public function jsonSerialize(): array
     {
         if (filled($this->filters)) {
@@ -134,6 +152,9 @@ class Link implements JsonSerializable
             'url' => $this->url,
             'external' => $this->external,
             'openInNewTab' => value($this->openInNewTab),
+            'uriKey' => $this->resourceUriKey,
+            'activeFilter' => $this->activeFilter,
+            'activeValue' => $this->activeValue,
         ];
     }
 }
